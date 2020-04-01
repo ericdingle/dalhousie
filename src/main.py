@@ -1,23 +1,36 @@
 from board import Board
 import human
 import minimax
+import reinforcement
+
+
+def getPlayer(value):
+  while True:
+    a = raw_input('Player %s - 1) Human, 2) Minimax, 3) Reinforcement: ' % value)
+    if a == '1':
+      return human.Player()
+    elif a == '2':
+      return minimax.Player(value)
+    elif a == '3':
+      return reinforcement.Player(value)
+
 
 def main():
   board = Board()
 
-  player_x = human.Player()
-  player_o = minimax.Player()
-  x_turn = True
+  player1 = getPlayer(Board.X)
+  player2 = getPlayer(Board.O)
+  turn = True  # True for player1 else False.
 
   # Game loop.
   while True:
-    value = Board.X if x_turn else Board.O
+    value = Board.X if turn else Board.O
 
     print('\n%s' % board)
     print('\nPlayer %s' % value)
 
-    player = player_x if x_turn else player_o
-    r, c = player.getMove(board, value)
+    player = player1 if turn else player2
+    r, c = player.getMove(board)
 
     board.setCell(r, c, value)
 
@@ -27,7 +40,7 @@ def main():
       value = Board.EMPTY
       break
 
-    x_turn = not x_turn
+    turn = not turn
 
   # Game over.
   if value == Board.EMPTY:

@@ -4,8 +4,11 @@ from board import Board
 
 class Player(object):
 
-  def getMove(self, board, value):
-    score, r, c = self._minimax(board, value)
+  def __init__(self, value):
+    self._value = value
+
+  def getMove(self, board):
+    score, r, c = self._minimax(board, self._value)
     return (r, c)
 
   def _minimax(self, board, value):
