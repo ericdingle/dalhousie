@@ -12,7 +12,10 @@ def getPlayer(value):
     elif a == '2':
       return minimax.Player(value)
     elif a == '3':
-      return reinforcement.Player(value)
+      player = reinforcement.Player(value)
+      num_games = int(raw_input('Number of training games: '))
+      player.train(num_games)
+      return player
 
 
 def main():
@@ -30,13 +33,13 @@ def main():
     print('\nPlayer %s' % value)
 
     player = player1 if turn else player2
-    r, c = player.getMove(board)
+    action = player.getAction(board)
 
-    board.setCell(r, c, value)
+    board.playAction(action, value)
 
     if board.isWinner(value):
       break
-    elif not board.getEmptyCells():
+    elif not board.getAllowedActions():
       value = Board.EMPTY
       break
 

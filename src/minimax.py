@@ -1,37 +1,46 @@
 import copy
+import random
 
 from board import Board
+
 
 class Player(object):
 
   def __init__(self, value):
     self._value = value
+    self._cache = {}
 
-  def getMove(self, board):
-    score, r, c = self._minimax(board, self._value)
-    return (r, c)
+  def getAction(self, board):
+    score, actions = self._minimax(board, self._value)
+    return actions[random.randrange(len(actions))]
 
   def _minimax(self, board, value):
-    cells = board.getEmptyCells()
-    if not cells:
-      return 0, None, None
+    state = hash(board)
+    if state in self._cache:
+      return self._cache[state]
 
-    max_score = -1
-    row = column = None
+    actions = board.getAllowedActions()
+    if not actions:
+      return 0, (None, None)  # Draw.
 
-    for (r, c) in board.getEmptyCells():
+    best_score = -1
+    best_actions = []
+
+    for action in actions:
       board_copy = copy.deepcopy(board)
-      board_copy.setCell(r, c, value)
+      board_copy.playAction(action, value)
 
       if board_copy.isWinner(value):
-        score = 1
+        score = 1  # Win.
       else:
         result = self._minimax(board_copy, Board.X if value == Board.O else Board.O)
         score = -result[0]
 
-      if score > max_score:
-        max_score = score
-        row = r
-        column = c
+      if score > best_score:
+        best_score = score
+        best_actions = [action]
+      elif score == best_score:
+        best_actions.append(action)
 
-    return (max_score, row, column)
+    result = self._cache[state] = (best_score, best_actions)
+    return result

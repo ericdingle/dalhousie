@@ -1,6 +1,6 @@
 class Player(object):
 
-  def getMove(self, board):
+  def getAction(self, board):
     r = raw_input("Row: ")
     c = raw_input("Column: ")
     return (int(r), int(c))

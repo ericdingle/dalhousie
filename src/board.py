@@ -15,10 +15,11 @@ class Board(object):
     rows = ['|'.join(columns) for columns in self._board]
     return '\n-+-+-\n'.join(rows)
 
-  def getEmptyCells(self):
+  def getAllowedActions(self):
     return [(r, c) for r in range(3) for c in range(3) if self._board[r][c] == self.EMPTY]
 
-  def setCell(self, r, c, value):
+  def playAction(self, action, value):
+    r, c = action
     assert(self._board[r][c] == self.EMPTY)
     self._board[r][c] = value
 
